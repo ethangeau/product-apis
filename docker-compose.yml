@@ -1,20 +1,15 @@
+version: '3'
+
 services:
   db:
-    image: postgres:latest
+    image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: product-apis
+    ports:
+      - 5432:5432
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
-  backend:
-    build: .
-    ports:
-      - 3000:3000
-    depends_on:
-      - db
-    command: sh -c 'npx prisma migrate dev --name init && npx prisma generate && npm install && npm run dev'
 
-volumes:
-  postgres_data:
