@@ -48,10 +48,10 @@ export const getProducts = async (req: Request, res: Response) => {
   const products = await prisma.product.findMany({
       where: {
           name: name as string,
-          quantity: Number(quantity),
-          stock: Number(stock),
+          quantity: quantity ? Number(quantity) : undefined,
+          stock: stock ? Number(stock) : undefined,
           category: category as string,
-          status: status === 'true' ? true : false,
+          status: status === 'true' ? true : status === 'false' ? false : undefined,
       },
   });
 
@@ -60,16 +60,11 @@ export const getProducts = async (req: Request, res: Response) => {
 
 export const getProduct = async (req: Request, res: Response) => {
 
-  const { name, id } = req.query;
-  const condition = name ? { name: name as string } : { id: Number(id) };
-
-  const product = await prisma.product.findFirst({
-    where: condition,
+  const { id } = req.params;
+  
+  const product = await prisma.product.findUnique({
+      where: { id: Number(id) },
   });
-
-  if (!product) {
-    return res.status(404).json({ message: "Product not found" });
-  }
 
   res.json(product);
 };
