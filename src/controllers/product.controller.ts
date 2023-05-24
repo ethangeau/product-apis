@@ -1,8 +1,9 @@
 import { PrismaClient } from "@prisma/client";
+import { Request, Response } from 'express';
 
 const prisma = new PrismaClient();
 
-export const createProduct = async (req, res) => {
+export const createProduct = async (req: Request, res: Response) => {
 
   const { name, description, stock, quantity, category, status } = req.body;
   
@@ -20,7 +21,7 @@ export const createProduct = async (req, res) => {
   res.json(product);
 };
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (req: Request, res: Response) => {
 
   const { id } = req.params;
   const { name, description, stock, quantity, category, status } = req.body;
@@ -40,7 +41,7 @@ export const updateProduct = async (req, res) => {
   res.json(product);
 };
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req: Request, res: Response) => {
 
   const { name, quantity, stock, category, status} = req.query;
 
@@ -57,7 +58,7 @@ export const getProducts = async (req, res) => {
   res.json(products);
 };
 
-export const getProduct = async (req, res) => {
+export const getProduct = async (req: Request, res: Response) => {
 
   const { name, id } = req.query;
   const condition = name ? { name: name as string } : { id: Number(id) };
@@ -73,13 +74,13 @@ export const getProduct = async (req, res) => {
   res.json(product);
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async (req: Request, res: Response) => {
 
   const { id } = req.params;
 
   const product = await prisma.product.delete({
       where: { id: Number(id) },
   });
-  
+
   res.json(product);
 };
