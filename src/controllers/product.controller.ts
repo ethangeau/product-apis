@@ -43,7 +43,7 @@ export const updateProduct = async (req: Request, res: Response) => {
 
 export const getProducts = async (req: Request, res: Response) => {
 
-  const { name, quantity, stock, category, status} = req.query;
+  const { name, quantity, stock, category, status, skip, take} = req.query;
 
   const products = await prisma.product.findMany({
       where: {
@@ -51,8 +51,10 @@ export const getProducts = async (req: Request, res: Response) => {
           quantity: quantity ? Number(quantity) : undefined,
           stock: stock ? Number(stock) : undefined,
           category: category as string,
-          status: status === 'true' ? true : status === 'false' ? false : undefined,
+          status: true,
       },
+      skip: skip ? Number(skip) : undefined,
+      take: take ? Number(take) : undefined,
   });
 
   res.json(products);
@@ -61,7 +63,7 @@ export const getProducts = async (req: Request, res: Response) => {
 export const getProduct = async (req: Request, res: Response) => {
 
   const { id } = req.params;
-  
+
   const product = await prisma.product.findUnique({
       where: { id: Number(id) },
   });
